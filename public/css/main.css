@@ -99,14 +99,14 @@ a {
     justify-content: space-between;
     text-align: left;
 }
-
+ 
 .friend {
     text-align: right;
 }
 
 .me form, .friend form {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: flex-start;
     width: 350px;
     background-color: transparent;

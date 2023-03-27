@@ -7,18 +7,15 @@
     <title>express</title>
     <link rel="stylesheet" href="/css/main.css">
 </head>
-<body>
+<body> 
     <%- include('blocks/header') -%>
     <main>
         <div class="chat">
             <div class="me">
-                <h2><%= username %></h2>
-                <form>
-                    <main>
-                        <div><p></p></div>
-                    </main>
+                <h2><%= username %></h2> 
+                <form method="post" action="/send"> 
                     <input id="sent" type="text" name="message">
-                    <button type="button" id="send" value="Click">Send</button>
+                    <button type="submit">Send</button>
                 </form>
             </div>
 

@@ -1,25 +1,11 @@
-//const http = require('http');
-//const fs = require('fs');
-//
-//let server = http.createServer((req, res) => {
-//    res.writeHead(200, {'Content-Type': 'text/html; charset=utf-8'});
-//
-//    if (req.url == '/')
-//        fs.createReadStream('./templates/index.html').pipe(res);
-//    else if (req.url == '/about')
-//        fs.createReadStream('./templates/about.html').pipe(res);
-//    else 
-//        fs.createReadStream('./templates/error.html').pipe(res);
-//});
-//
-//const PORT = 3000;
-//const HOST = 'localhost';
-//
-//server.listen(PORT, HOST, () => {
-//    console.log(`Server works: http://${HOST}:${PORT}`);
-//});
 const fs = require('fs');
 const express = require('express');
+
+//Cheetsheet
+//let today = Date();
+//let format = today.toLocaleDateString('en-US');
+
+
 
 
 const app = express();
@@ -46,7 +32,7 @@ const showOthers = (namee) => {
     let userss = file.users;
     let others = [];
 
-    for (i of userss){
+    for (i of userss){ 
         if (i.name !== namee){
             others.push(i.name);
         } 
@@ -60,7 +46,12 @@ app.get('/user/:username/', (req, res) => {
     res.render('user', data);
 });
 
-app.get('/user/:username/chat/:friend', (req, res) => {
+app.get('/user/:username/chat/:friend', (req, res, next) => {
+    let data = {username: req.params.username, friend: req.params.friend ,others: showOthers(req.params.username)};
+    res.render('chat', data);
+})
+
+app.get('/user/:username/chat/:friend/:message', (req, res) => {
     let data = {username: req.params.username, friend: req.params.friend ,others: showOthers(req.params.username)};
     res.render('chat', data);
 })
@@ -71,26 +62,38 @@ app.post('/check-user', (req, res) => {
 
     let file = JSON.parse(fs.readFileSync('./names.json', 'utf-8'));
     file.users.push({name: username, password: word});
+
     fs.writeFileSync('./names.json', JSON.stringify(file, null, 2));
 
-    if (username == "")
+    if (username == ""){
         return res.redirect('/');
-    else 
-        return res.redirect('/user/' + username);
-
+    } 
+    else {
+        return res.redirect('/login');
+    }
 });
 
-app.post('/send', (req, res) => {
-    let message = req.body.message;
+app.post('/send', (req, res, next) => {
+    const m = req.body.message;
+    const name = req.body.username;
+    const friend = req.body.friend;
+    let today = new Date();
+    let format = '/'+today.toLocaleDateString('en-US');
+    let hours = today.getHours()+':';
+    let minutes = today.getMinutes()+':';
+    let seconds = today.getSeconds()+':';
+    let time = hours+minutes+seconds;
+    let mname = 'message'+time+format;
 
-    let obj = {name: message, password: word};
+    let message = {[mname]: m};
 
     let file = JSON.parse(fs.readFileSync('./names.json', 'utf-8'));
-    let userss = file.users;
-    let arr = [];
+    file.messages.push(message);
+
+
+    fs.writeFileSync('./names.json', JSON.stringify(file, null, 2));
+    return res.redirect(req.get(`referer`));
 })
-
-
 
 app.post('/verify', (req, res) => {
     let username = req.body.usernamev;
@@ -108,8 +111,8 @@ app.post('/verify', (req, res) => {
         } 
     }
 
-    if (arr.length === 0){
-        return res.redirect('/');
+    if (arr.length === 0){ 
+        return res.redirect('/login');
     } else if (arr.length === 1){
         return res.redirect('/user/' + username);
     }

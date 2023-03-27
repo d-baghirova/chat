@@ -1,7 +1,6 @@
 {
   "name": "chat",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
@@ -12,5 +11,16 @@
     "body-parser": "^1.20.1",
     "ejs": "^3.1.8",
     "express": "^4.18.2"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hobbies-hommies/chat.git"
+  },
+  "keywords": [],
+  "bugs": {
+    "url": "https://github.com/hobbies-hommies/chat/issues"
+  },
+  "homepage": "https://github.com/hobbies-hommies/chat#readme",
+  "description": ""
 }
