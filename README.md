@@ -1,4 +1,4 @@
-# I used EJS, Node.js and Express.js for this project.
+# chat
 
 It is a website with authorization authentification and chats.
 
